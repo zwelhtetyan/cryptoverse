@@ -19,10 +19,14 @@ const CryptoDetails = () => {
 
    return (
       <>
+         <h3 className='text-3xl font-medium text-center mb-4'>
+            {coinDetail.name}
+         </h3>
+
          <img
             src={coinDetail.iconUrl}
             alt='logo'
-            className='w-40 h-40 mx-auto block mb-8'
+            className='w-20 h-20 md:w-32 md:h-32 mx-auto block mb-8'
          />
 
          <Chart

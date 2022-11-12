@@ -3,6 +3,27 @@ import { Line } from 'react-chartjs-2';
 import { useQuery } from 'react-query';
 import { fetchCoinAPI } from '../api';
 
+import {
+   Chart as ChartJS,
+   CategoryScale,
+   LinearScale,
+   PointElement,
+   LineElement,
+   Title,
+   Tooltip,
+   Legend,
+} from 'chart.js';
+
+ChartJS.register(
+   CategoryScale,
+   LinearScale,
+   PointElement,
+   LineElement,
+   Title,
+   Tooltip,
+   Legend
+);
+
 const Chart = ({ currentPrice, name, crypotId }) => {
    const [timePeriod, setTimePeriod] = useState('24h');
    const timeStamps = [];
@@ -32,10 +53,11 @@ const Chart = ({ currentPrice, name, crypotId }) => {
       coinPrices.push(coin.price);
    });
 
-   const dataa = {
+   const data = {
       labels: timeStamps,
       datasets: [
          {
+            responsive: true,
             label: 'Price in USD',
             fill: false,
             data: coinPrices,
@@ -45,9 +67,30 @@ const Chart = ({ currentPrice, name, crypotId }) => {
       ],
    };
 
+   const options = {
+      responsive: true,
+      borderWidth: 1.5,
+      elements: {
+         point: {
+            radius: 0,
+         },
+      },
+      plugins: {
+         tooltip: {
+            mode: 'index',
+            intersect: false,
+            yAlign: 'bottom',
+         },
+      },
+      hover: {
+         mode: 'index',
+         intersect: false,
+      },
+   };
+
    return (
       <>
-         <div className='flex items-center justify-between'>
+         <div className='xs:flex items-center justify-between'>
             <select
                name=''
                id=''
@@ -60,11 +103,12 @@ const Chart = ({ currentPrice, name, crypotId }) => {
                ))}
             </select>
 
-            <div>
+            <p className='text-center my-4'>
                Current {name} price - {currentPrice}
-            </div>
+            </p>
          </div>
-         <Line data={dataa} />
+
+         <Line data={data} options={options} />
       </>
    );
 };

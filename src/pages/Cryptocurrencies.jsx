@@ -1,4 +1,5 @@
 import millify from 'millify';
+import { useEffect, useRef, useState } from 'react';
 import { useQuery } from 'react-query';
 import { Link } from 'react-router-dom';
 import { fetchCoinAPI } from '../api';
@@ -23,12 +24,34 @@ const CryptoCard = ({ i, uuid, name, price, marketCap, change, iconUrl }) => (
    </Link>
 );
 
-const Cryptocurrencies = ({ limit }) => {
-   const { data, isLoading, error, isError } = useQuery('getCoins', () =>
-      fetchCoinAPI('coins').then(({ data }) => data.data.coins)
+const Cryptocurrencies = ({ limit, hideInput }) => {
+   const { data, isLoading, error, isError } = useQuery(
+      ['getCoins', limit],
+      () =>
+         fetchCoinAPI(`coins?limit=${limit ? limit : 100}`).then(
+            ({ data }) => data.data.coins
+         )
    );
 
-   const cryptos = limit ? data?.slice(0, 10) : data;
+   const [cryptos, setCryptos] = useState();
+   const [searchTerm, setSearchTerm] = useState('');
+   const searchInputRef = useRef();
+
+   useEffect(() => {
+      setCryptos(
+         data?.filter((coin) => coin.name.toLowerCase().includes(searchTerm))
+      );
+   }, [data, searchTerm]);
+
+   const handleSearhTerm = ({ target }) => {
+      const searchValue = target.value.trim().toLowerCase();
+      setSearchTerm(searchValue);
+   };
+
+   const handleSumbit = (e) => {
+      e.preventDefault();
+      searchInputRef.current.blur();
+   };
 
    if (isLoading) return <Spinner />;
 
@@ -37,6 +60,19 @@ const Cryptocurrencies = ({ limit }) => {
 
    return (
       <>
+         {!hideInput && (
+            <form className='mb-4 flex justify-center' onSubmit={handleSumbit}>
+               <input
+                  ref={searchInputRef}
+                  type='text'
+                  value={searchTerm}
+                  onChange={handleSearhTerm}
+                  placeholder='Search Coin...'
+                  className='shadow h-10 focus:outline-sky-600 px-4 w-full sm:w-auto'
+               />
+            </form>
+         )}
+
          <div className='grid xs:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4 gap-4'>
             {cryptos?.map((crypto, i) => (
                <CryptoCard {...crypto} i={i + 1} key={i} />

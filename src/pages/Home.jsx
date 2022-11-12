@@ -46,7 +46,7 @@ const Home = () => {
             Top 10 Cryptocurrencies in the world
          </h2>
 
-         <Cryptocurrencies limit={10} />
+         <Cryptocurrencies limit={10} hideInput />
 
          <button className='btn-primary'>
             <Link to='cryptocurrencies' className='px-4 py-3 block'>

@@ -10,10 +10,11 @@ const RootLayout = () => {
 
    return (
       <>
-         <main className='flex h-screen overflow-hidden'>
+         <main className='flex'>
             <SideBar />
 
-            <section className='flex-1 p-4 pt-0 bg-stone-100 overflow-y-auto'>
+            <section className='flex-1 p-4 pt-0 bg-stone-100 h-screen overflow-hidden overflow-y-auto'>
+               {/* to scroll to when location change */}
                <div ref={docRef} className='pt-4' />
 
                <Outlet />
