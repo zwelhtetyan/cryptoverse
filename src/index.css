@@ -2,6 +2,12 @@
 @tailwind components;
 @tailwind utilities;
 
+@layer base {
+   body {
+      overflow: hidden;
+   }
+}
+
 @layer components {
    .navlink {
       @apply flex items-center p-4 hover:bg-stone-900 duration-200;
@@ -10,4 +16,8 @@
    .btn-primary {
       @apply bg-stone-800 text-white rounded-md hover:bg-[#1C1917] mt-4 mx-auto block duration-200;
    }
+}
+
+.crypto-details h3 {
+   @apply text-2xl mt-4 mb-1 font-semibold;
 }

@@ -1,12 +1,14 @@
-import axios from 'axios';
 import millify from 'millify';
-import React from 'react';
 import { useQuery } from 'react-query';
-import { headers } from '../api';
+import { Link } from 'react-router-dom';
+import { fetchCoinAPI } from '../api';
 import Spinner from '../components/Spinner';
 
-const CryptoCard = ({ i, name, price, marketCap, change, iconUrl }) => (
-   <div className='border bg-white shadow-sm hover:shadow-md rounded-sm'>
+const CryptoCard = ({ i, uuid, name, price, marketCap, change, iconUrl }) => (
+   <Link
+      to={`/cryptocurrencies/${uuid}`}
+      className='border bg-white shadow-sm hover:shadow-md rounded-sm'
+   >
       <div className='flex items-center justify-between border-b-[1px] border-b-gray-200 py-3 px-4'>
          <h2 className='font-bold text-lg'>
             {i}. {name}
@@ -18,16 +20,12 @@ const CryptoCard = ({ i, name, price, marketCap, change, iconUrl }) => (
          <p className='mb-2'>Market Cap: {millify(marketCap)}</p>
          <p className='mb-2'>Daily Change: {millify(change)}%</p>
       </div>
-   </div>
+   </Link>
 );
 
 const Cryptocurrencies = ({ limit }) => {
    const { data, isLoading, error, isError } = useQuery('getCoins', () =>
-      axios
-         .get('https://coinranking1.p.rapidapi.com/coins', {
-            headers,
-         })
-         .then(({ data }) => data.data.coins)
+      fetchCoinAPI('coins').then(({ data }) => data.data.coins)
    );
 
    const cryptos = limit ? data?.slice(0, 10) : data;
@@ -39,7 +37,7 @@ const Cryptocurrencies = ({ limit }) => {
 
    return (
       <>
-         <div className='grid xs:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4 gap-4 mt-4'>
+         <div className='grid xs:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4 gap-4'>
             {cryptos?.map((crypto, i) => (
                <CryptoCard {...crypto} i={i + 1} key={i} />
             ))}

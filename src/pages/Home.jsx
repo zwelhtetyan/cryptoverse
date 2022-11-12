@@ -1,18 +1,13 @@
-import axios from 'axios';
 import millify from 'millify';
 import { useQuery } from 'react-query';
 import { Link } from 'react-router-dom';
-import { headers } from '../api';
+import { fetchCoinAPI } from '../api';
 import Spinner from '../components/Spinner';
 import Cryptocurrencies from './Cryptocurrencies';
 
 const Home = () => {
    const { data, isLoading, error, isError } = useQuery('getStats', () =>
-      axios
-         .get('https://coinranking1.p.rapidapi.com/stats', {
-            headers,
-         })
-         .then(({ data }) => data.data)
+      fetchCoinAPI('stats').then(({ data }) => data.data)
    );
 
    let stats = [];
@@ -47,7 +42,7 @@ const Home = () => {
             </div>
          )}
 
-         <h2 className='text-2xl font-bold mt-8 uppercase'>
+         <h2 className='text-2xl font-bold mt-8 uppercase mb-4'>
             Top 10 Cryptocurrencies in the world
          </h2>
 
@@ -59,9 +54,11 @@ const Home = () => {
             </Link>
          </button>
 
-         <h2 className='text-2xl font-bold mt-8 uppercase'>
+         {/* <h2 className='text-2xl font-bold mt-8 uppercase'>
             Latest Crypto News
          </h2>
+
+         <News limit={5} /> */}
       </div>
    );
 };
